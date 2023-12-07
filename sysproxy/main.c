@@ -221,7 +221,27 @@ free_calloc:
 	return ret;
 }
 
-int _tmain(int argc, LPTSTR argv[])
+int ResetProxy() {
+        INTERNET_PER_CONN_OPTION_LIST options;
+        memset(&options, 0, sizeof(INTERNET_PER_CONN_OPTION_LIST));
+ 
+        DWORD flags = 1;
+
+        DWORD count = 4, argIdx = 2, optIdx = 1;
+        DWORD opts[] = { 0, 0, INTERNET_PER_CONN_FLAGS,
+            INTERNET_PER_CONN_PROXY_SERVER, INTERNET_PER_CONN_PROXY_BYPASS,
+            INTERNET_PER_CONN_AUTOCONFIG_URL };
+
+        initialize(&options, count);
+
+        options.pOptions[0].dwOption = INTERNET_PER_CONN_FLAGS;
+        options.pOptions[0].Value.dwValue = flags;
+
+        options.dwOptionCount = optIdx;
+        return apply(&options);
+}
+
+int execSysproxy(int argc, LPTSTR argv[])
 {
 #ifdef _UNICODE
 	_setmode(_fileno(stdin), _O_U16TEXT);
